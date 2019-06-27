@@ -1,40 +1,31 @@
-
-  buildscript {
-  
-    apply from: './versions.gradle'
-
-    repository(repositories)
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.0'
-    }
-
-}
-
 apply plugin: 'com.android.library'
 
+def safeExtGet(prop, fallback) {
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
+
 android {
-
-    compileSdkVersion 23
-
-    buildToolsVersion deps.android.buildToolsVersion
+    compileSdkVersion safeExtGet('compileSdkVersion', 28)
 
     defaultConfig {
-        minSdkVersion deps.android.minSdkVersion
-        targetSdkVersion deps.android.targetSdkVersion
+        minSdkVersion safeExtGet('minSdkVersion', 16)
+        targetSdkVersion safeExtGet('targetSdkVersion', 28)
         versionCode 1
         versionName "1.0"
     }
-    lintOptions {
-        abortOnError false
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
     }
 }
-allprojects {
-    repository(repositories)
-}
-
 
 dependencies {
-    implementation 'com.facebook.react:react-native:+'
+    implementation fileTree(dir: "libs", include: ["*.jar","*.aar"])
+    implementation "com.facebook.react:react-native:${safeExtGet('reactNativeVersion', '+')}"
+    implementation "com.facebook.react:react-native:+"  // From node_modules
 }
-  
+
+
+
