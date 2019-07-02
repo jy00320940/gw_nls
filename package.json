@@ -1,7 +1,7 @@
 
 {
   "name": "react-native-gw-nls",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "",
   "main": "index.tsx",
   "scripts": {
@@ -10,8 +10,16 @@
   "keywords": [
     "react-native"
   ],
+  "repository": {
+      "type": "git",
+      "url": "git+https://github.com/jy00320940/react-native-create-library-evs"
+  },
   "author": "",
   "license": "",
+  "bugs": {
+      "url": "https://github.com/jy00320940/react-native-create-library-evs/issues"
+  },
+  "homepage": "https://github.com/jy00320940/react-native-create-library-evs#readme",
   "peerDependencies": {
     "react-native": "0.59.8"
   }

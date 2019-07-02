@@ -2,12 +2,13 @@
 import { DeviceEventEmitter, NativeModules, } from 'react-native';
 
 const RNGwNls = NativeModules.RNGwNls;
-const token = '985ea3b3947e4f418b3f1ab1c6ac26a9';
-const appKey = 'DUOjtd79osQZph8D';
+
 export interface Listener {
     failed(emsg:string):void;
     closed(emsg:string):void;
     completed(resp:any):void;
+    token?:string;
+    appKey?:string;
 }
 
 var listener : Listener;
@@ -43,7 +44,7 @@ DeviceEventEmitter.addListener('OnRecognizedCompleted', resp => {
     }
 });
 
-export function startRecognizerwithRecorderWithToken(lis:Listener){
+export function startRecognizerwithRecorderWithToken(token:string,appKey:string,lis:Listener){
     listener = lis;
     RNGwNls.startRecognizerwithRecorderWithToken(token,appKey);
 }
