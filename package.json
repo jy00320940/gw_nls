@@ -12,14 +12,14 @@
   ],
   "repository": {
       "type": "git",
-      "url": "git+https://github.com/jy00320940/react-native-create-library-evs"
+      "url": "git+https://github.com/jy00320940/gw_nls"
   },
   "author": "",
   "license": "",
   "bugs": {
-      "url": "https://github.com/jy00320940/react-native-create-library-evs/issues"
+      "url": "https://github.com/jy00320940/gw_nls/issues"
   },
-  "homepage": "https://github.com/jy00320940/react-native-create-library-evs#readme",
+  "homepage": "https://github.com/jy00320940/gw_nls#readme",
   "peerDependencies": {
     "react-native": "0.59.8"
   }
