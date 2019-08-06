@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3572E47122F17DA6009D56C3 /* RNGwNlsTranscriberRequestVoice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3572E47022F17DA6009D56C3 /* RNGwNlsTranscriberRequestVoice.m */; };
+		3572E4CC22F19B04009D56C3 /* RNGwNlsTranscriberRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3572E4CB22F19B04009D56C3 /* RNGwNlsTranscriberRequest.m */; };
+		3572E4CF22F1A0AC009D56C3 /* RNGwNlsRecognizeRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3572E4CE22F1A0AC009D56C3 /* RNGwNlsRecognizeRequest.m */; };
+		3572E4D222F27B58009D56C3 /* RNGwNlsVoiceRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 3572E4D122F27B58009D56C3 /* RNGwNlsVoiceRecorder.m */; };
+		3572E4D522F28705009D56C3 /* RNGwNlsPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3572E4D422F28705009D56C3 /* RNGwNlsPlayer.m */; };
+		3594E18322F4355200171D3C /* RNGwNlsSynthesizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3594E18222F4355200171D3C /* RNGwNlsSynthesizer.m */; };
+		3594E18622F4360B00171D3C /* RNGwNlsPlayAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 3594E18522F4360B00171D3C /* RNGwNlsPlayAudio.m */; };
 		B3E7B58A1CC2AC0600A0062D /* RNGwNls.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RNGwNls.m */; };
 /* End PBXBuildFile section */
 
@@ -24,6 +31,20 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libRNGwNls.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNGwNls.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		3572E46F22F17DA6009D56C3 /* RNGwNlsTranscriberRequestVoice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNGwNlsTranscriberRequestVoice.h; sourceTree = "<group>"; };
+		3572E47022F17DA6009D56C3 /* RNGwNlsTranscriberRequestVoice.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNGwNlsTranscriberRequestVoice.m; sourceTree = "<group>"; };
+		3572E4CA22F19B04009D56C3 /* RNGwNlsTranscriberRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNGwNlsTranscriberRequest.h; sourceTree = "<group>"; };
+		3572E4CB22F19B04009D56C3 /* RNGwNlsTranscriberRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNGwNlsTranscriberRequest.m; sourceTree = "<group>"; };
+		3572E4CD22F1A0AC009D56C3 /* RNGwNlsRecognizeRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNGwNlsRecognizeRequest.h; sourceTree = "<group>"; };
+		3572E4CE22F1A0AC009D56C3 /* RNGwNlsRecognizeRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNGwNlsRecognizeRequest.m; sourceTree = "<group>"; };
+		3572E4D022F27B58009D56C3 /* RNGwNlsVoiceRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNGwNlsVoiceRecorder.h; sourceTree = "<group>"; };
+		3572E4D122F27B58009D56C3 /* RNGwNlsVoiceRecorder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNGwNlsVoiceRecorder.m; sourceTree = "<group>"; };
+		3572E4D322F28705009D56C3 /* RNGwNlsPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNGwNlsPlayer.h; sourceTree = "<group>"; };
+		3572E4D422F28705009D56C3 /* RNGwNlsPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNGwNlsPlayer.m; sourceTree = "<group>"; };
+		3594E18122F4355200171D3C /* RNGwNlsSynthesizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNGwNlsSynthesizer.h; sourceTree = "<group>"; };
+		3594E18222F4355200171D3C /* RNGwNlsSynthesizer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNGwNlsSynthesizer.m; sourceTree = "<group>"; };
+		3594E18422F4360B00171D3C /* RNGwNlsPlayAudio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNGwNlsPlayAudio.h; sourceTree = "<group>"; };
+		3594E18522F4360B00171D3C /* RNGwNlsPlayAudio.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNGwNlsPlayAudio.m; sourceTree = "<group>"; };
 		B3E7B5881CC2AC0600A0062D /* RNGwNls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNGwNls.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* RNGwNls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNGwNls.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -52,6 +73,20 @@
 			children = (
 				B3E7B5881CC2AC0600A0062D /* RNGwNls.h */,
 				B3E7B5891CC2AC0600A0062D /* RNGwNls.m */,
+				3594E18122F4355200171D3C /* RNGwNlsSynthesizer.h */,
+				3594E18222F4355200171D3C /* RNGwNlsSynthesizer.m */,
+				3594E18422F4360B00171D3C /* RNGwNlsPlayAudio.h */,
+				3594E18522F4360B00171D3C /* RNGwNlsPlayAudio.m */,
+				3572E4D022F27B58009D56C3 /* RNGwNlsVoiceRecorder.h */,
+				3572E4D122F27B58009D56C3 /* RNGwNlsVoiceRecorder.m */,
+				3572E4D322F28705009D56C3 /* RNGwNlsPlayer.h */,
+				3572E4D422F28705009D56C3 /* RNGwNlsPlayer.m */,
+				3572E4CD22F1A0AC009D56C3 /* RNGwNlsRecognizeRequest.h */,
+				3572E4CE22F1A0AC009D56C3 /* RNGwNlsRecognizeRequest.m */,
+				3572E4CA22F19B04009D56C3 /* RNGwNlsTranscriberRequest.h */,
+				3572E4CB22F19B04009D56C3 /* RNGwNlsTranscriberRequest.m */,
+				3572E46F22F17DA6009D56C3 /* RNGwNlsTranscriberRequestVoice.h */,
+				3572E47022F17DA6009D56C3 /* RNGwNlsTranscriberRequestVoice.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -113,6 +148,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3594E18622F4360B00171D3C /* RNGwNlsPlayAudio.m in Sources */,
+				3594E18322F4355200171D3C /* RNGwNlsSynthesizer.m in Sources */,
+				3572E4CC22F19B04009D56C3 /* RNGwNlsTranscriberRequest.m in Sources */,
+				3572E47122F17DA6009D56C3 /* RNGwNlsTranscriberRequestVoice.m in Sources */,
+				3572E4CF22F1A0AC009D56C3 /* RNGwNlsRecognizeRequest.m in Sources */,
+				3572E4D222F27B58009D56C3 /* RNGwNlsVoiceRecorder.m in Sources */,
+				3572E4D522F28705009D56C3 /* RNGwNlsPlayer.m in Sources */,
 				B3E7B58A1CC2AC0600A0062D /* RNGwNls.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

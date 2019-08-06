@@ -7,9 +7,11 @@
 #import <React/RCTUIManager.h>
 #import <React/RCTUtils.h>
 
-@interface RNGwNls() <NlsSpeechRecognizerwithRecorderDelegate>
+@interface RNGwNls() <DemoVoiceRecorderDelegate>
 {
-    Boolean recognizerStarted;
+    //录音文件名称
+    NSString *_voiceName;
+    NSOutputStream *_outputStream;
 }
 @end
 
@@ -19,161 +21,144 @@
 
 RCT_EXPORT_MODULE()
 
-- (dispatch_queue_t)methodQueue
-{
-    return dispatch_get_main_queue();
+#pragma mark -一句话语音识别-
+RCT_EXPORT_METHOD(startRecongnizerWithToken:(NSString *)token AppKey:(NSString *)appkey){
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (!_recognizeRequest) {
+            _recognizeRequest = [[RNGwNlsRecognizeRequest alloc] initWithToken:token AppKey:appkey Bridge:self.bridge];
+        }
+        [_recognizeRequest start];
+    });
 }
 
-+ (BOOL)requiresMainQueueSetup {
-    return YES;
+RCT_EXPORT_METHOD(stopRecognizer){
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_recognizeRequest stop];
+    });
 }
 
-- (instancetype)init {
-    if (self = [super init]) {
-        //1. 全局参数初始化操作
-        //1.1 初始化识别客户端,将recognizerStarted状态置为false
-        _nlsClient = [[NlsClientAdaptor alloc]init];
-        recognizerStarted = false;
-        //1.3 初始化识别参数类
-        _recognizeRequestParam = [[RecognizerRequestParam alloc]init];
-        //1.4 设置log级别
-        [_nlsClient setLog:NULL logLevel:LOGDEBUG];
-    }
-    return self;
+#pragma mark -实时语音识别-
+RCT_EXPORT_METHOD(startTranscribeWithToken:(NSString *)token AppKey:(NSString *)appkey){
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (!_transcrinber) {
+            _transcrinber = [[RNGwNlsTranscriberRequest alloc] initWithToken:token AppKey:appkey Bridge:self.bridge];
+        }
+        [_transcrinber start];
+    });
 }
 
-
-RCT_EXPORT_METHOD(startRecognizerwithRecorderWithToken:(NSString *)token AppKey:(NSString *)appkey){
-    
-    if (recognizerStarted) {
-        //        NSLog(@"already started!");
-        return;
-    }
-    //2. 创建请求对象和开始识别
-    if(_recognizeRequest!= NULL){
-        [_recognizeRequest releaseRequest];
-        _recognizeRequest = NULL;
-    }
-    //2.1 创建请求对象，设置NlsSpeechRecognizerDelegate回调
-    _recognizeRequest = [_nlsClient createRecognizerRequestwithRecorder];
-    _recognizeRequest.delegate = self;
-    
-    //2.2 设置RecognizerRequestParam请求参数
-    [_recognizeRequestParam setFormat:@"opu"];
-    //返回中间识别结果
-    [_recognizeRequestParam setEnableIntermediateResult:YES];
-    //设置文本规则，如识别'12345',如打开即识别为'12345',如设为NO则识别为'一二三四五'
-    [_recognizeRequestParam setEnableInverseTextNormalization:YES];
-    //是否在识别结果中添加标点
-    [_recognizeRequestParam setEnablePunctuationPrediction:NO];
-    
-    //请使用https://help.aliyun.com/document_detail/72153.html 动态生成token
-    [_recognizeRequestParam setToken:token];
-    //或者采用本Demo的_generateTokeng方法获取token
-    // <AccessKeyId> <AccessKeySecret> 请使用您的阿里云账户生成 https://ak-console.aliyun.com/
-    //[_recognizeRequestParam setToken:[self _generateToken:@"AccessKeyId" withSecret:@"AccessKeyId"]];
-    
-    
-    //请使用阿里云语音服务管控台(https://nls-portal.console.aliyun.com/)生成您的appkey
-    [_recognizeRequestParam setAppkey:appkey];
-    
-    //是否开启静音检测
-    [_recognizeRequestParam setEnableVoiceDetection:YES];
-    //允许的最大开始静音，可选，单位是毫秒，超出后服务端将会发送RecognitionCompleted事件，结束本次识别，需要先设置enable_voice_detection为true
-    [_recognizeRequestParam setMaxStartSilence:3000];
-    //允许的最大结束静音，可选，单位是毫秒，超出后服务端将会发送RecognitionCompleted事件，结束本次识别，需要先设置enable_voice_detection为true
-    [_recognizeRequestParam setMaxEndSilence:800];
-    
-    //2.3 传入请求参数
-    [_recognizeRequest setRecognizeParams:_recognizeRequestParam];
-    
-    //2.4 启动录音和识别，将recognizerStarted置为true
-    [_recognizeRequest start];
-    recognizerStarted = true;
+RCT_EXPORT_METHOD(stopTranscribe){
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_transcrinber stop];
+    });
 }
 
-RCT_EXPORT_METHOD(stopRecognizerwithRecorder){
-    //3 结束识别 停止录音，停止识别请求
-    [_recognizeRequest stop];
-    recognizerStarted = false;
-    _recognizeRequest = NULL;
+#pragma mark -实时识别录音文件-
+RCT_EXPORT_METHOD(startTranscribeRecorderWithToken:(NSString *)token AppKey:(NSString *)appkey FilePath:(NSString *)filePath ){
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (!_transcrinberVoice) {
+            _transcrinberVoice = [[RNGwNlsTranscriberRequestVoice alloc] initWithToken:token AppKey:appkey Bridge:self.bridge];
+        }
+//        NSLog(@"startTranscribeRecorderWithToken----%@",filePath);
+        [_transcrinberVoice setFilePath:[self getPathWithFilePath:filePath]];
+        [_transcrinberVoice start];
+    });
+}
+
+RCT_EXPORT_METHOD(stopTranscribeRecorder){
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_transcrinberVoice stop];
+    });
+}
+
+#pragma mark -录音文件-
+RCT_EXPORT_METHOD(startRecordVideo:(NSString *)name ){
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //初始化录音recorder工具
+        _voiceRecorder = [[RNGwNlsVoiceRecorder alloc]init];
+        _voiceName = name;
+        _voiceRecorder.delegate = self;
+        [_voiceRecorder start];
+    });
+}
+
+RCT_EXPORT_METHOD(stopRecordVideo){
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_voiceRecorder stop:true];
+    });
 }
 
 /**
- *4. NlsSpeechRecognizerDelegate回调方法
+ *5. 录音相关回调
  */
-//4.1 识别回调，本次请求失败
--(void)OnTaskFailed:(NlsDelegateEvent)event statusCode:(NSString*)statusCode errorMessage:(NSString*)eMsg{
-    recognizerStarted = false;
-//        NSLog(@"OnTaskFailed, error message is: %@",eMsg);
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    if (statusCode && eMsg) {
-        [dict setObject:statusCode forKey:@"statusCode"];
-        [dict setObject:eMsg forKey:@"eMsg"];
-    }
-    [self.bridge.eventDispatcher sendDeviceEventWithName:@"OnTaskFailed" body:dict];
+- (void)recorderDidStart {
+    NSLog(@"Did start recorder!");
+    // 开启文件输出流
+    _outputStream = [NSOutputStream outputStreamToFileAtPath:[self getPathWithFilePath:_voiceName] append:YES];
+    [_outputStream open];
 }
 
-//4.2 识别回调，服务端连接关闭
--(void)OnChannelClosed:(NlsDelegateEvent)event statusCode:(NSString*)statusCode errorMessage:(NSString*)eMsg{
-    recognizerStarted = false;
-//        NSLog(@"OnChannelClosed, statusCode is: %@",statusCode);
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    if (statusCode && eMsg) {
-        [dict setObject:statusCode forKey:@"statusCode"];
-        [dict setObject:eMsg forKey:@"eMsg"];
-    }
-    [self.bridge.eventDispatcher sendDeviceEventWithName:@"OnChannelClosed" body:eMsg];
+- (void)recorderDidStop {
+    NSLog(@"Did stop recorder!");
+    [_outputStream close];
+    _outputStream = nil;
 }
 
-//4.3 识别回调，识别结果结束
--(void)OnRecognizedCompleted:(NlsDelegateEvent)event result:(NSString *)result statusCode:(NSString*)statusCode errorMessage:(NSString*)eMsg{
-    recognizerStarted = false;
-    //    {"header":{"namespace":"SpeechRecognizer","name":"RecognitionCompleted","status":20000000,"message_id":"f769c5cdc3744e949b18e57829b82d09","task_id":"d8060bd8881049fc8fb52cdae8f935a0","status_text":"Gateway:SUCCESS:Success."},"payload":{"result":"你好你好","duration":1200}}
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    if (statusCode && eMsg) {
-        [dict setObject:statusCode forKey:@"statusCode"];
-        [dict setObject:[self dictionaryWithJsonString:result] forKey:@"eMsg"];
-    }
-    [self.bridge.eventDispatcher sendDeviceEventWithName:@"OnRecognizedCompleted" body:dict];
+- (void)voiceDidFail:(NSError *)error {
+    NSLog(@"Did recorder error!");
+    [_outputStream close];
+    _outputStream = nil;
 }
 
-
-//4.4 识别回调，识别中间结果
--(void)OnRecognizedResultChanged:(NlsDelegateEvent)event result:(NSString *)result statusCode:(NSString*)statusCode errorMessage:(NSString*)eMsg{
-    //    dispatch_async(dispatch_get_main_queue(), ^{
-    //        // UI更新代码
-    //        NSLog(@"OnRecognizedResultChanged%@", result);
-    //
-    //    });
+//5.1 录音数据回调
+- (void)voiceRecorded:(NSData *)frame {
+    NSLog(@"%@--------%ld",frame,frame.length);
+    [self plistSaveWithData:frame];
 }
 
-- (void)OnVoiceData:(NlsDelegateEvent)event data:(NSData *)voiceData length:(NSInteger)length {
-    //    NSLog(@"on VoiceData length :%lu",(unsigned long)[voiceData length]);
-}
-
-
-- (void)OnVoiceVolume:(NlsDelegateEvent)event voiceVolume:(NSInteger)voiceVolume {
-    //    NSLog(@"on Voice volume :%lu",(unsigned long)voiceVolume);
-}
-
-- (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString
-{
-    if (jsonString == nil) {
-        return nil;
-    }
+//5.2录制录音时返回音量大小
+- (void)voiceVolume:(NSInteger)volume {
     
-    NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-    NSError *err;
-    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                        options:NSJSONReadingMutableContainers
-                                                          error:&err];
-    if(err)
-    {
-        NSLog(@"json解析失败：%@",err);
-        return nil;
-    }
-    return dic;
+}
+
+- (void)plistSaveWithData:(NSData *)data {
+    [_outputStream write:data.bytes maxLength:data.length];
+}
+
+- (NSString *)getPathWithFilePath:(NSString *)filePaht{
+    NSString *docsdir = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
+    NSString * dataFilePath = [docsdir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",filePaht]];
+    return dataFilePath;
+}
+
+#pragma mark -播放录音文件-
+RCT_EXPORT_METHOD(playVideo:(NSString *)name ){
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _player = [RNGwNlsPlayer sharedInstance];
+        [_player setName:name];
+        [_player playWithUrl:[self getPathWithFilePath:name]];
+    });
+}
+
+RCT_EXPORT_METHOD(pauseVideo){
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_player stop];
+    });
+}
+
+#pragma mark -语音合成-
+RCT_EXPORT_METHOD(startSynthesizerWithToken:(NSString *)token AppKey:(NSString *)appKey Text:(NSString *)text ){
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _synthesizer = [[RNGwNlsSynthesizer alloc]init];
+        [_synthesizer startSynthesizerWithToken:token AppKey:appKey];
+    });
+    [_synthesizer setText:text];
+}
+
+RCT_EXPORT_METHOD(stopSynthesizer){
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_synthesizer stop];
+    });
 }
 @end
 
